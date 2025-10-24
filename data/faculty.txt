@@ -1,0 +1,60 @@
+Faculty Members - Computer Engineering Department
+
+The Computer Engineering Department at Marmara University has a distinguished faculty with expertise in various areas of computer engineering.
+
+Full Professors:
+1. Prof. Dr. Ahmet Yılmaz
+   - Research Areas: Artificial Intelligence, Machine Learning
+   - Email: ahmet.yilmaz@marmara.edu.tr
+   - Office: C-301
+
+2. Prof. Dr. Elif Demir
+   - Research Areas: Database Systems, Big Data
+   - Email: elif.demir@marmara.edu.tr
+   - Office: C-302
+
+3. Prof. Dr. Mehmet Kaya
+   - Research Areas: Computer Networks, Network Security
+   - Email: mehmet.kaya@marmara.edu.tr
+   - Office: C-303
+
+Associate Professors:
+1. Assoc. Prof. Dr. Ayşe Çelik
+   - Research Areas: Software Engineering, Software Testing
+   - Email: ayse.celik@marmara.edu.tr
+   - Office: C-304
+
+2. Assoc. Prof. Dr. Can Özkan
+   - Research Areas: Computer Vision, Image Processing
+   - Email: can.ozkan@marmara.edu.tr
+   - Office: C-305
+
+3. Assoc. Prof. Dr. Zeynep Aktaş
+   - Research Areas: Natural Language Processing, Text Mining
+   - Email: zeynep.aktas@marmara.edu.tr
+   - Office: C-306
+
+Assistant Professors:
+1. Asst. Prof. Dr. Burak Yıldız
+   - Research Areas: Embedded Systems, IoT
+   - Email: burak.yildiz@marmara.edu.tr
+   - Office: C-307
+
+2. Asst. Prof. Dr. Selin Arslan
+   - Research Areas: Cloud Computing, Distributed Systems
+   - Email: selin.arslan@marmara.edu.tr
+   - Office: C-308
+
+3. Asst. Prof. Dr. Emre Korkmaz
+   - Research Areas: Mobile Computing, Android Development
+   - Email: emre.korkmaz@marmara.edu.tr
+   - Office: C-309
+
+Research Assistants:
+The department has 15 research assistants working on various projects and assisting with teaching responsibilities. They provide laboratory support and help students with course-related questions.
+
+Faculty Office Hours:
+Most faculty members have office hours on Tuesdays and Thursdays from 14:00-16:00. Students are encouraged to schedule appointments via email for specific questions or project discussions.
+
+Department Head:
+Prof. Dr. Ahmet Yılmaz serves as the current Department Head. For administrative matters, students can contact the department secretary at ceng@marmara.edu.tr or call +90 (216) 348 05 92.

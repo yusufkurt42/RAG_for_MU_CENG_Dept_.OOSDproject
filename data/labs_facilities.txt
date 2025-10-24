@@ -1,0 +1,76 @@
+Research Labs and Facilities
+
+The Computer Engineering Department at Marmara University provides state-of-the-art research laboratories and facilities for students and faculty members.
+
+Research Laboratories:
+
+1. Artificial Intelligence and Machine Learning Lab
+   - Location: Room C-201
+   - Equipment: High-performance GPU servers, Deep Learning workstations
+   - Research Focus: Neural networks, deep learning, reinforcement learning
+   - Lab Coordinator: Prof. Dr. Ahmet Yılmaz
+   - Available for: Graduate students, undergraduate final year projects
+
+2. Software Engineering Lab
+   - Location: Room C-202
+   - Equipment: Development workstations, version control systems, CI/CD tools
+   - Research Focus: Software development methodologies, testing, quality assurance
+   - Lab Coordinator: Assoc. Prof. Dr. Ayşe Çelik
+   - Available for: All students for coursework and projects
+
+3. Computer Networks and Security Lab
+   - Location: Room C-203
+   - Equipment: Network routers, switches, firewalls, security testing tools
+   - Research Focus: Network protocols, cybersecurity, penetration testing
+   - Lab Coordinator: Prof. Dr. Mehmet Kaya
+   - Available for: Graduate students and specific coursework
+
+4. Database and Big Data Lab
+   - Location: Room C-204
+   - Equipment: Database servers, Hadoop cluster, data analytics tools
+   - Research Focus: Database design, big data processing, data mining
+   - Lab Coordinator: Prof. Dr. Elif Demir
+   - Available for: Graduate students and database courses
+
+5. Computer Vision Lab
+   - Location: Room C-205
+   - Equipment: High-resolution cameras, image processing workstations
+   - Research Focus: Image processing, pattern recognition, computer vision
+   - Lab Coordinator: Assoc. Prof. Dr. Can Özkan
+   - Available for: Graduate students and related coursework
+
+6. Embedded Systems and IoT Lab
+   - Location: Room C-206
+   - Equipment: Arduino boards, Raspberry Pi, sensors, IoT devices
+   - Research Focus: Embedded programming, IoT applications, sensor networks
+   - Lab Coordinator: Asst. Prof. Dr. Burak Yıldız
+   - Available for: All students for hands-on projects
+
+General Computer Laboratories:
+
+Lab A: 40 workstations - General programming and coursework
+Lab B: 30 workstations - Operating systems and system programming
+Lab C: 35 workstations - Web development and databases
+Lab D: 25 workstations - Mobile application development
+
+Operating Hours:
+Monday - Friday: 08:00 - 20:00
+Saturday: 09:00 - 17:00
+Sunday: Closed
+
+Lab Access:
+Students must have their student ID cards to access the laboratories. Research labs require prior permission from the lab coordinator. General labs are open to all students during operating hours.
+
+Available Software:
+- IDEs: Visual Studio, Eclipse, IntelliJ IDEA, PyCharm
+- Programming Languages: Python, Java, C/C++, JavaScript, C#
+- Database Systems: MySQL, PostgreSQL, MongoDB, Oracle
+- Development Tools: Git, Docker, Kubernetes
+- Machine Learning: TensorFlow, PyTorch, Scikit-learn
+- Data Analytics: MATLAB, R, Apache Spark
+
+Library and Resources:
+The department has a dedicated technical library with computer science books, journals, and online resources. Students have access to ACM Digital Library, IEEE Xplore, and other academic databases.
+
+Technical Support:
+IT support staff are available Monday-Friday from 09:00-17:00 for technical issues. Students can submit support tickets through the department website or visit the IT office in Room C-101.

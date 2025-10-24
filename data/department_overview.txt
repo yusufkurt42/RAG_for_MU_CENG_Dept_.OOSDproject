@@ -1,0 +1,36 @@
+Marmara University Computer Engineering Department Overview
+
+The Computer Engineering Department at Marmara University is one of the leading engineering departments in Turkey. Founded in 1991, it offers comprehensive education in both undergraduate and graduate levels.
+
+Department Mission:
+To educate qualified computer engineers who can design, develop, and implement innovative solutions to complex technological problems. The department aims to produce graduates who are proficient in both theoretical foundations and practical applications of computer engineering.
+
+Academic Programs:
+1. Bachelor of Science in Computer Engineering (4 years)
+2. Master of Science in Computer Engineering (2 years)
+3. Ph.D. in Computer Engineering
+
+Research Areas:
+- Artificial Intelligence and Machine Learning
+- Software Engineering and Development
+- Computer Networks and Security
+- Database Systems and Big Data
+- Computer Architecture and Operating Systems
+- Image Processing and Computer Vision
+- Natural Language Processing
+- Internet of Things (IoT)
+- Cloud Computing
+- Embedded Systems
+
+The department emphasizes hands-on learning through laboratory courses, industry collaborations, and research projects. Students have access to modern computing facilities and laboratories equipped with the latest technology.
+
+Location:
+Marmara University Göztepe Campus
+Faculty of Engineering
+Computer Engineering Department
+34722 Kadıköy, Istanbul, Turkey
+
+Contact:
+Phone: +90 (216) 348 05 92
+Email: ceng@marmara.edu.tr
+Website: https://ceng.marmara.edu.tr

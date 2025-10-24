@@ -1,0 +1,89 @@
+Undergraduate Program Curriculum - Computer Engineering
+
+The undergraduate program at Marmara University Computer Engineering Department consists of 8 semesters with a total of 240 ECTS credits.
+
+First Year Courses:
+Fall Semester:
+- Introduction to Computer Engineering and Programming I
+- Calculus I
+- Physics I
+- Chemistry
+- Technical English I
+- Atatürk's Principles and History of Turkish Revolution I
+
+Spring Semester:
+- Introduction to Computer Engineering and Programming II
+- Calculus II
+- Physics II
+- Linear Algebra
+- Technical English II
+- Atatürk's Principles and History of Turkish Revolution II
+
+Second Year Courses:
+Fall Semester:
+- Data Structures
+- Discrete Mathematics
+- Digital Logic Design
+- Differential Equations
+- Object-Oriented Programming
+
+Spring Semester:
+- Algorithms and Complexity
+- Computer Organization
+- Database Systems
+- Probability and Statistics
+- System Programming
+
+Third Year Courses:
+Fall Semester:
+- Operating Systems
+- Computer Networks
+- Software Engineering
+- Microprocessor Systems
+- Elective I
+
+Spring Semester:
+- Artificial Intelligence
+- Computer Architecture
+- Web Technologies
+- Numerical Analysis
+- Elective II
+
+Fourth Year Courses:
+Fall Semester:
+- Compiler Design
+- Computer Security
+- Elective III
+- Elective IV
+- Graduation Project I
+
+Spring Semester:
+- Professional Ethics
+- Entrepreneurship
+- Elective V
+- Elective VI
+- Graduation Project II
+
+Elective Courses Include:
+- Machine Learning
+- Deep Learning
+- Computer Vision
+- Natural Language Processing
+- Mobile Application Development
+- Cloud Computing
+- Internet of Things
+- Big Data Analytics
+- Blockchain Technologies
+- Game Development
+- Computer Graphics
+- Distributed Systems
+- Software Testing and Quality Assurance
+- Human-Computer Interaction
+
+Graduation Requirements:
+- Complete all required courses with a minimum GPA of 2.0
+- Complete 30 days of mandatory internship
+- Successfully defend graduation project
+- Total of 240 ECTS credits
+
+Students must maintain a minimum GPA of 2.0 to graduate. The program includes both theoretical courses and practical laboratory work to ensure students gain hands-on experience.

@@ -1,0 +1,118 @@
+Admission and Student Life
+
+Admission Requirements:
+
+For Turkish Students:
+The Computer Engineering Department at Marmara University accepts students through the YKS (Yükseköğretim Kurumları Sınavı) central university entrance examination. Students must:
+- Take the SAY (Numerical) section of YKS
+- Meet the minimum score threshold announced each year (typically around 400-420 points)
+- Submit preferences through ÖSYM system during the placement period
+
+For International Students:
+International applicants can apply through:
+- YÖS (Foreign Student Examination) organized by Marmara University
+- SAT or equivalent international examination scores
+- High school diploma with transcript
+- English proficiency certificate (TOEFL, IELTS, or equivalent)
+
+Application Period:
+- Turkish Students: July-August (following YKS results)
+- International Students: May-June for Fall semester
+
+Student Organizations and Clubs:
+
+1. Computer Engineering Student Society (CENG-OS)
+   - Organizes technical workshops and seminars
+   - Hosts coding competitions and hackathons
+   - Arranges industry visits and career talks
+   - Contact: cengos@marmara.edu.tr
+
+2. Artificial Intelligence Club
+   - Weekly AI and ML study groups
+   - Kaggle competition participation
+   - Guest speakers from industry
+   - Projects on latest AI technologies
+
+3. Robotics Club
+   - Hands-on robotics projects
+   - Participation in national robotics competitions
+   - Arduino and Raspberry Pi workshops
+   - Collaboration with Engineering Faculty
+
+4. Cyber Security Club
+   - CTF (Capture The Flag) competitions
+   - Security awareness workshops
+   - Penetration testing training
+   - Bug bounty programs
+
+Student Support Services:
+
+Academic Advising:
+Each student is assigned a faculty advisor who provides guidance on:
+- Course selection and academic planning
+- Career development and internship opportunities
+- Graduate school applications
+- Research project opportunities
+
+Career Services:
+The department maintains strong industry connections and helps students with:
+- Internship placements (30-day mandatory internship)
+- Job fairs and recruitment events
+- Resume and interview preparation
+- Alumni networking events
+
+Scholarships and Financial Aid:
+Available scholarships include:
+- Merit-based scholarships for high achievers
+- Need-based financial aid
+- Research assistantship positions
+- Industry-sponsored scholarships
+
+International Programs:
+
+Erasmus+ Exchange Program:
+Students can study abroad for one or two semesters at partner universities in Europe. Partner institutions include universities in Germany, Spain, Poland, and other EU countries.
+
+Mevlana Exchange Program:
+Exchange program with universities across the world, including institutions in Asia, Middle East, and Americas.
+
+Exchange Requirements:
+- Completed at least 2 semesters
+- Minimum GPA of 2.5
+- Language proficiency in the host country's language
+
+Campus Facilities:
+
+Student Cafeteria:
+Open Monday-Friday 08:00-18:00, offering affordable meals and snacks.
+
+Library:
+Engineering Faculty Library provides:
+- Study areas and reading rooms
+- Computer workstations
+- Access to online journals and databases
+- Group study rooms
+- 24/7 access during exam periods
+
+Sports Facilities:
+- Gymnasium and fitness center
+- Basketball and volleyball courts
+- Football field
+- Indoor swimming pool
+
+Accommodation:
+Marmara University offers on-campus dormitories for students. Private off-campus accommodation is also available near the Göztepe campus.
+
+Student Events:
+- Annual CENG Tech Fest (March)
+- Graduation ceremonies (July)
+- Welcome week for freshmen (September)
+- Alumni meetups (Throughout the year)
+- Industry networking events (Monthly)
+
+Contact for Student Affairs:
+Student Affairs Office
+Room: C-102
+Phone: +90 (216) 348 05 93
+Email: student.affairs@ceng.marmara.edu.tr
+Office Hours: Monday-Friday 09:00-17:00
