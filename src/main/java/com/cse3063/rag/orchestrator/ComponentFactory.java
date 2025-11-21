@@ -7,17 +7,16 @@ import com.cse3063.rag.model.ChunkStore;
 import com.cse3063.rag.retriever.KeywordIndex;
 import com.cse3063.rag.retriever.Retriever;
 import com.cse3063.rag.retriever.SimpleRetriever;
-import com.cse3063.rag.retriever.keyword.KeywordRetriever;
-import com.cse3063.rag.reranker.NoOpReranker;
-import com.cse3063.rag.reranker.Reranker;
-import com.cse3063.rag.reranker.simple.SimpleReranker;
 import com.cse3063.rag.answer.AnswerAgent;
 import com.cse3063.rag.answer.TemplateAnswerAgent;
 import com.cse3063.rag.store.JsonChunkStore;
-import com.cse3063.rag.util.JsonConfigLoader;
 import com.cse3063.rag.writer.HeuristicQueryWriter;
 import com.cse3063.rag.writer.QueryWriter;
-import com.cse3063.rag.store.ChunkStoreLoader;
+import com.cse3063.rag.reranker.Reranker;
+import com.cse3063.rag.reranker.PhraseAwareReranker;
+import com.cse3063.rag.util.JsonConfigLoader;
+import com.cse3063.rag.util.ChunkStoreLoader;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -210,9 +209,7 @@ public class ComponentFactory {
 
         switch (type.toLowerCase()) {
             case "simple":
-                return new SimpleReranker(config);
-            case "noop":
-                return new NoOpReranker();
+                return new PhraseAwareReranker();
             default:
                 throw new IllegalArgumentException("Unknown Reranker type: " + type);
         }
