@@ -1,4 +1,4 @@
-package com.cse3063.rag.util;
+package com.cse3063.rag.utility;
 
 import com.cse3063.rag.model.Chunk;
 import com.cse3063.rag.model.ChunkStore;

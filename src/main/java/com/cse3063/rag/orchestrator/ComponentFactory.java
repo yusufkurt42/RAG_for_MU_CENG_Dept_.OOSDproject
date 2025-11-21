@@ -10,14 +10,14 @@ import com.cse3063.rag.retriever.SimpleRetriever;
 import com.cse3063.rag.answer.AnswerAgent;
 import com.cse3063.rag.answer.TemplateAnswerAgent;
 import com.cse3063.rag.store.JsonChunkStore;
+import com.cse3063.rag.utility.ChunkStoreLoader;
+import com.cse3063.rag.utility.JsonConfigLoader;
 import com.cse3063.rag.writer.HeuristicQueryWriter;
 import com.cse3063.rag.writer.QueryWriter;
 import com.cse3063.rag.reranker.Reranker;
 import com.cse3063.rag.reranker.PhraseAwareReranker;
-import com.cse3063.rag.util.JsonConfigLoader;
-import com.cse3063.rag.util.ChunkStoreLoader;
 
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +35,7 @@ public class ComponentFactory {
     }
 
 
-    public static ChunkStore createChunkStore(String configPath) {
+    public static ChunkStore createChunkStore(String configPath) throws IOException {
         
         // 1. Load the master configuration map.
         Map<String, Object> masterConfig = JsonConfigLoader.loadAndParse(configPath);
@@ -58,8 +58,9 @@ public class ComponentFactory {
     /**
      * Creates the IntentDetector strategy by reading the master configuration file.
      * The factory handles the file I/O internally.
+     * @throws IOException 
      */
-    public static IntentDetector createIntentDetector(String configPath) {// 1. Load the master configuration from the path
+    public static IntentDetector createIntentDetector(String configPath) throws IOException {// 1. Load the master configuration from the path
         Map<String, Object> masterConfig = JsonConfigLoader.loadAndParse(configPath);
         
         // 2. Extract the specific Intent Detector section
@@ -107,8 +108,9 @@ public class ComponentFactory {
 
     /**
      * Creates the QueryWriter strategy by reading the master configuration file.
+     * @throws IOException 
      */
-    public static QueryWriter createQueryWriter(String configPath) {
+    public static QueryWriter createQueryWriter(String configPath) throws IOException {
         // 1. Load the master configuration from the path
         Map<String, Object> masterConfig = JsonConfigLoader.loadAndParse(configPath);
         
@@ -172,8 +174,9 @@ public class ComponentFactory {
 
     /**
      * Creates the Retriever strategy. Needs external Index object (Information Expert).
+     * @throws IOException 
      */
-    public static Retriever createRetriever(String configPath, KeywordIndex keywordIndex) {
+    public static Retriever createRetriever(String configPath, KeywordIndex keywordIndex) throws IOException {
         
         // 1. Konfigürasyonu Yükle
         Map<String, Object> masterConfig = JsonConfigLoader.loadAndParse(configPath);
@@ -201,8 +204,9 @@ public class ComponentFactory {
 
     /**
      * Creates the Reranker strategy, supporting 'simple' and 'noop'.
+     * @throws IOException 
      */
-    public static Reranker createReranker(String configPath) {
+    public static Reranker createReranker(String configPath) throws IOException {
         Map<String, Object> masterConfig = JsonConfigLoader.loadAndParse(configPath);
         Map<String, Object> config = getConfigSection(masterConfig, "reranker");
         String type = (String) Optional.ofNullable(config.get("type")).orElse("noop"); 
@@ -217,8 +221,9 @@ public class ComponentFactory {
 
     /**
      * Creates the AnswerAgent strategy. Needs external ChunkStore and Validator.
+     * @throws IOException 
      */
-    public static AnswerAgent createAnswerAgent(String configPath, String chunkPath) {
+    public static AnswerAgent createAnswerAgent(String configPath, String chunkPath) throws IOException {
         Map<String, Object> masterConfig = JsonConfigLoader.loadAndParse(configPath);
         Map<String, Object> config = getConfigSection(masterConfig, "answer_agent");
         String type = (String) Optional.ofNullable(config.get("type")).orElse("template");

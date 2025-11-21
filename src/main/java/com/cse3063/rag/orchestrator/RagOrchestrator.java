@@ -1,5 +1,6 @@
 package com.cse3063.rag.orchestrator;
 
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -8,7 +9,7 @@ import java.util.Map;
  * and manages the flow of the user request.
  */
 public class RagOrchestrator {
-    private final StageFactory factory;
+    private final ComponentFactory factory = new ComponentFactory();
     private final Pipeline pipeline;
 
     /**
@@ -30,7 +31,6 @@ public class RagOrchestrator {
     public RagOrchestrator(Map<String, Object> appConfig) {
         this.pipeline = new Pipeline();
 
-        buildPipeline();
     }
 
     /**
@@ -40,11 +40,16 @@ public class RagOrchestrator {
      */
     private void buildPipeline(String configPath) {
         // The order is strictly defined here:
-        pipeline.addStage(ComponentFactory.createIntentDetector(configPath));
-        pipeline.addStage(ComponentFactory.createQueryWriter(configPath));
-        pipeline.addStage(ComponentFactory.createRetriever(configPath));
-        pipeline.addStage(ComponentFactory.createReranker(configPath));
-        pipeline.addStage(ComponentFactory.createAnswerAgent(configPath));
+        try {
+            pipeline.addStage(ComponentFactory.createIntentDetector(configPath));
+            pipeline.addStage(ComponentFactory.createQueryWriter(configPath));
+            pipeline.addStage(ComponentFactory.createRetriever(configPath, null));
+            pipeline.addStage(ComponentFactory.createReranker(configPath));
+            pipeline.addStage(ComponentFactory.createAnswerAgent(configPath, configPath));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public String answerQuestion(String question) {

@@ -6,7 +6,7 @@ import com.cse3063.rag.retriever.Hit;
 import java.util.Comparator;
 import java.util.List;
 
-public class PhraseAwareReranker implements PipelineStage {
+public class PhraseAwareReranker implements Reranker {
 
     private static final double PHRASE_BOOST = 5.0; // Configurable boost value
 
@@ -27,14 +27,14 @@ public class PhraseAwareReranker implements PipelineStage {
                 String lowerText = hit.getChunk().getText().toLowerCase();
                 if (lowerText.contains(lowerQuery)) {
                     // Apply boost to the existing score
-                    double newScore = hit.getScore() + PHRASE_BOOST;
-                    hit.setScore(newScore);
+                    double newScore = hit.getInitialScore() + PHRASE_BOOST;
+                    hit.setRerankScore(newScore);
                 }
             }
         }
 
         // 2. Re-sort: Order by new scores (Descending)
-        hits.sort(Comparator.comparingDouble(Hit::getScore).reversed());
+        hits.sort(Comparator.comparingDouble(Hit::getRerankScore).reversed());
 
         // 3. Update Context
         context.setRetrievalHits(hits);
