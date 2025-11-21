@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "RAG App - Soru Sor",
+            "request": "launch",
+            "mainClass": "com.cse3063.rag.orchestrator.RagApplication",
+            "projectName": "rag-project",
+            "args": [
+                "--config", "src/main/resources/config.json",
+                "--q", "Mazeret sınavı başvurusu nasıl yapılır?"
+            ],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
