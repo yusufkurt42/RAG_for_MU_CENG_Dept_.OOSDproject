@@ -7,12 +7,12 @@ import java.util.Map;
 
 public class RagApplication {
     public static void main(String[] args) throws Exception {
-        // 1. Load configuration from resources/config.json
-        ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> appConfig = mapper.readValue(new File("src/main/resources/config.json"), new TypeReference<Map<String,Object>>(){});
+        // 1. Get config and chunks paths
+        String chunkPath = "src/main/resources/chunks.json";
+        String configPath = "src/main/resources/config.json";
 
         // 2. Initialize Controller
-        RagOrchestrator orchestrator = new RagOrchestrator(appConfig);
+        RagOrchestrator orchestrator = new RagOrchestrator(configPath, chunkPath);
 
         // 3. Run Scenario
         String question = "Ali Haydar Özer'in maili nedir?";

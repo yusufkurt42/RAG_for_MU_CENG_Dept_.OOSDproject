@@ -1,4 +1,8 @@
 package com.cse3063.rag.orchestrator;
+
+import com.cse3063.rag.tracer.TraceBus;
+import com.cse3063.rag.tracer.TraceEvent;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +13,7 @@ import java.util.List;
  */
 public class Pipeline {
 
-    // The list of PipelineStage implementations to execute
+    // The list of PipelineStage implementations to execute (Strategy Pattern)
     private final List<PipelineStage> stages = new ArrayList<>();
 
     public void addStage(PipelineStage stage) {
@@ -18,26 +22,50 @@ public class Pipeline {
 
     /**
      * Executes all stages added to the pipeline in order.
-     * The Observer (TraceBus) logic should be integrated here or in the Orchestrator.
+     * FIX: Updated to accept TraceBus for proper Observer pattern integration.
      */
-    public Context execute(Context context) {
+    public Context execute(Context context, TraceBus traceBus) {
+        
         for (PipelineStage stage : stages) {
             long startTime = System.currentTimeMillis();
+            String stageName = stage.getName(); // e.g., "IntentDetector"
+            boolean success = true;
+            String outputSummary = "Success";
 
             try {
-                // Execute the stage logic
+                // 1. Execute the stage logic
                 stage.execute(context);
 
-                // Publish trace event (Simulated logging)
-                long duration = System.currentTimeMillis() - startTime;
-                context.addMetadata(stage.getName() + "_time", duration);
-                System.out.println(String.format("[TRACE] %s completed in %d ms.", stage.getName(), duration));
-
             } catch (Exception e) {
-                // Publish error trace event
-                context.addMetadata(stage.getName() + "_error", e.getMessage());
-                System.err.println(String.format("[ERROR] Pipeline stopped at %s: %s", stage.getName(), e.getMessage()));
-                break; // Stop pipeline execution on failure
+                // Handle failures gracefully in the trace
+                success = false;
+                outputSummary = "Error: " + e.getMessage();
+                
+                // Print critical error to stderr for immediate visibility
+                System.err.println(String.format("[CRITICAL] Pipeline stopped at %s: %s", stageName, e.getMessage()));
+                e.printStackTrace();
+            } finally {
+                // 2. Calculate Duration
+                long duration = System.currentTimeMillis() - startTime;
+
+                // 3. Create Trace Event (Inputs/Outputs can be refined based on Context state)
+                // For Iteration 1, we log the stage name and success status.
+                TraceEvent event = new TraceEvent(
+                    stageName,
+                    "Context(Input)",   // Girdi özeti
+                    outputSummary,      // Çıktı özeti veya Hata mesajı
+                    duration
+                );
+
+                // 4. Publish to Bus (Observer Pattern)
+                if (traceBus != null) {
+                    traceBus.trace(event);
+                }
+
+                // If the stage failed, stop the pipeline to prevent cascading errors.
+                if (!success) {
+                    break; 
+                }
             }
         }
         return context;
