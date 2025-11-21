@@ -1,0 +1,68 @@
+{
+  "pipeline_settings": {
+    "log_level": "DEBUG",
+    "trace_sink": "JsonlTraceSink",
+    "trace_path": "logs/run"
+  },
+  "pipeline_stages": {
+    "intent_detector": {
+      "strategy_class": "com.cse3063.rag.detector.RuleIntentDetector",
+      "config_ref": "intent_detector_config"
+    },
+    "query_writer": {
+      "strategy_class": "com.marmara.rag.writer.HeuristicQueryWriter",
+      "config_ref": "query_writer_config"
+    },
+    "retriever": {
+      "strategy_class": "com.marmara.rag.retriever.KeywordRetriever",
+      "config_ref": "retriever_config"
+    },
+    "reranker": {
+      "strategy_class": "com.marmara.rag.reranker.SimpleReranker",
+      "config_ref": "reranker_config"
+    },
+    "answer_agent": {
+      "strategy_class": "com.marmara.rag.agent.TemplateAnswerAgent",
+      "config_ref": "answer_agent_config"
+    }
+  },
+  "data_paths": {
+    "chunk_store_path": "data/chunks/chunks.json",
+    "keyword_index_path": "data/index/keyword_index.json"
+  },
+  "intent_detector_config": {
+    "priority_list": [
+      "STAFF_LOOKUP",
+      "COURSE",
+      "REGISTRATION",
+      "POLICY_FAQ"
+    ],
+    "intent_rules": {
+      "STAFF_LOOKUP": ["murat", "ganiz", "hoca", "ofis", "advisor", "danışman"],
+      "COURSE": ["cse3063", "kredi", "ön koşul", "pre-requisite", "ders"],
+      "REGISTRATION": ["kayıt", "ekle-sil", "izin", "mazeret", "yarıyıl"],
+      "POLICY_FAQ": ["sınav", "başarı notları", "tek ders", "disiplin", "yönetmelik"]
+    }
+  },
+  "query_writer_config": {
+    "use_stemming": false,
+    "max_terms": 10,
+    "stopwords": ["ve", "ile", "mi", "mı", "nedir", "ne"],
+    "booster_terms": {
+      "STAFF_LOOKUP": ["staff", "advisor", "office"],
+      "POLICY_FAQ": ["yönetmelik", "direktif"]
+    }
+  },
+  "retriever_config": {
+    "top_k": 10,
+    "tie_break_fields": ["docId", "chunkId"]
+  },
+  "reranker_config": {
+    "proximity_window_chars": 15,
+    "title_boost_value": 3,
+    "tf_sum_multiplier": 10
+  },
+  "answer_agent_config": {
+    "citation_format": "{docId}:{sectionId}:{startOffset}-{endOffset}"
+  }
+}
