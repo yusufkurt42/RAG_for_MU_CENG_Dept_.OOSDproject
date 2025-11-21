@@ -1,22 +1,48 @@
 package com.cse3063.rag.orchestrator;
 
-import java.io.File;
-import java.util.Map;
-
 public class RagApplication {
-    public static void main(String[] args) throws Exception {
-        // 1. Get config and chunks paths
-        String chunkPath = "src/main/resources/chunks.json";
+
+    public static void main(String[] args) {
+        // Varsayılan Değerler (Fallback)
         String configPath = "src/main/resources/config.json";
+        String chunkPath = "src/main/resources/chunks.json"; // Genelde config içinden okunur ama parametre de olabilir
+        String question = "Ali Haydar Özer'in maili nedir?"; // Varsayılan test sorusu
 
-        // 2. Initialize Controller
-        RagOrchestrator orchestrator = new RagOrchestrator(configPath, chunkPath);
+        // 1. CLI Argümanlarını Ayrıştır (Basit Parsing)
+        for (int i = 0; i < args.length; i++) {
+            switch (args[i]) {
+                case "--config":
+                    if (i + 1 < args.length) configPath = args[++i];
+                    break;
+                case "--chunks": // Opsiyonel: Chunk path'i dışarıdan vermek isterseniz
+                    if (i + 1 < args.length) chunkPath = args[++i];
+                    break;
+                case "--q":
+                case "--question":
+                    if (i + 1 < args.length) question = args[++i];
+                    break;
+            }
+        }
 
-        // 3. Run Scenario
-        String question = "Ali Haydar Özer'in maili nedir?";
-        String answer = orchestrator.answerQuestion(question);
+        System.out.println("Başlatılıyor...");
+        System.out.println("Config: " + configPath);
+        System.out.println("Soru: " + question);
 
-        // 4. Output
-        System.out.println("\nFinal Result:\n" + answer);
+        try {
+            // 2. Controller'ı Başlat (Orkestratör)
+            // Not: Chunk path genelde config dosyasının içinde "data_paths" altında tanımlıdır.
+            // Ancak constructor'ınız ayrı istiyorsa böyle kalabilir.
+            RagOrchestrator orchestrator = new RagOrchestrator(configPath, chunkPath);
+
+            // 3. Senaryoyu Çalıştır
+            String answer = orchestrator.answerQuestion(question);
+
+            // 4. Çıktıyı Yazdır (stdout: final answer line) [cite: 151]
+            System.out.println("\n" + answer);
+
+        } catch (Exception e) {
+            System.err.println("Uygulama Hatası: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

@@ -40,9 +40,10 @@ public class SlidingWindowChunker implements IChunker {
             chunks.add(new Chunk(
                 chunkId,
                 docId,
-                normalizedText,
                 start,
-                end
+                end,
+                normalizedText
+
             ));
 
             if (end == textLength) {

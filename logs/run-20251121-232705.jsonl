@@ -1,0 +1,2 @@
+{"stage":"intent_detector","input":"Context(Input)","output":"Success","timestamp":1763756826222,"durationMs":2}
+{"stage":"query_writer","input":"Context(Input)","output":"Error: Unimplemented method 'setTermsList'","timestamp":1763756826260,"durationMs":5}

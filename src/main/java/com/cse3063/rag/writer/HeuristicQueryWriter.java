@@ -69,7 +69,7 @@ public class HeuristicQueryWriter implements QueryWriter {
     			terms.remove(maxTerms);
         }
 
-        content.setTermsList(terms);
+        content.setQueryTerms(terms);
     }
     @Override
     public String getName() { return "query_writer"; }
