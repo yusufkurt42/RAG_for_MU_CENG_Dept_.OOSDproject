@@ -7,33 +7,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class RuleIntentDetector implements IntentDetector {
 
-    private int[] priority;
+    // Priority array is now a field, passed via configuration (Factory).
+    private final int[] priority;
     // Map of Intent to Keyword List
-    private Map<Intent, List<String>> intentRules;
+    private final Map<Intent, List<String>> intentRules;
 
-    public RuleIntentDetector(String jsonFilePath) {
-        try {
-            loadRules(jsonFilePath);
-        } catch (IOException e) {
-            System.err.println("Hata: rules.json dosyası okunamadı! " + e.getMessage());
-            this.intentRules = Map.of(); 
-        }
-    }
-
-    private void loadRules(String path) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        
-        // Converts JSON file to Map<Intent, List<String>> structure
-        // Jackson library automatically attempts to convert String keys to Enum.
-        this.intentRules = mapper.readValue( // ObjectMapper -> Converts JSON -> Java object.
-            new File(path), 
-            new TypeReference<Map<Intent, List<String>>>() {}
-        );
+    /**
+     * Constructor: Initializes the detector with the pre-parsed rules and priority list.
+     * FIX 1 (SRP): Removes file I/O; accepts pre-parsed data.
+     * FIX 2: Initializes the priority field.
+     */
+    public RuleIntentDetector(Map<Intent, List<String>> intentRules, int[] priority) {
+        this.intentRules = (intentRules != null) ? intentRules : Collections.emptyMap();
+        this.priority = (priority != null) ? priority : new int[0];
     }
 
     @Override

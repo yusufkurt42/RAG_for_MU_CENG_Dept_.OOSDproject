@@ -1,6 +1,7 @@
 package com.cse3063.rag.writer;
 import com.cse3063.rag.orchestrator.Context;
 import com.cse3063.rag.detector.Intent;
+
 import java.util.*;
 
 public class HeuristicQueryWriter implements QueryWriter {
@@ -8,21 +9,23 @@ public class HeuristicQueryWriter implements QueryWriter {
 	private final List<String> stopwords;
 	private final List<String> suffixList;
     private final Map<Intent, List<String>> boosters;
-    private static final int MAX_TERMS = 10;
+    private final int maxTerms;
 
-    public HeuristicQueryWriter(List<String> stopwords, Map<Intent, List<String>> boosters, List<String> suffixList) {
+    public HeuristicQueryWriter(List<String> stopwords, Map<Intent, List<String>> boosters, List<String> suffixList, int maxTerms) {
         this.stopwords = stopwords;
         this.boosters = boosters;
         List<String> tempSuffixList = new ArrayList<>(suffixList);
         tempSuffixList.sort((s1, s2) -> s2.length() - s1.length());
 		this.suffixList = tempSuffixList;
+		this.maxTerms = maxTerms;
     }
     @Override
-    public void execute(Context context) {
-        String question = context.getOriginalQuestion();
-        Intent intent = context.getCurrentIntent();
+    public void execute(Context content) {
+    	String question = content.getOriginalQuestion();
+    	Intent intent = content.getCurrentIntent();
+
         if (question == null || question.isEmpty()) {
-            context.setQueryTerms(Collections.emptyList());
+        	content.setTermsList(Collections.emptyList());
         }
         
         
@@ -48,7 +51,7 @@ public class HeuristicQueryWriter implements QueryWriter {
         	}
         	
             
-            if (!term.isEmpty() && !stopwords.contains(term) && !terms.contains(term) && terms.size() < MAX_TERMS) {
+            if (!term.isEmpty() && !stopwords.contains(term) && !terms.contains(term) && terms.size() < maxTerms) {
             	terms.add(term);
             }
         }
@@ -62,13 +65,13 @@ public class HeuristicQueryWriter implements QueryWriter {
         	if (terms.contains(boosterTerm))
         			terms.remove(boosterTerm);
     		terms.add(0, boosterTerm);
-    		if(terms.size() >= MAX_TERMS)
-    			terms.remove(MAX_TERMS);
+    		if(terms.size() >= maxTerms)
+    			terms.remove(maxTerms);
         }
 
-        context.setQueryTerms(terms);
+        content.setTermsList(terms);
     }
-
     @Override
     public String getName() { return "query_writer"; }
+
 }

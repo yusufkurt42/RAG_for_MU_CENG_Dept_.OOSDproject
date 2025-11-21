@@ -55,4 +55,9 @@ public class Context {
         return String.format("Context{Intent='%s', Terms=%s, Hits=%d, Answer='%s'}",
                 currentIntent, queryTerms, retrievalHits.size(), finalAnswer);
     }
+
+    public void setTermsList(List<String> terms) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setTermsList'");
+    }
 }

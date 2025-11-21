@@ -5,7 +5,7 @@ import com.cse3063.rag.orchestrator.Context;
 import com.cse3063.rag.model.Chunk;
 import java.util.*;
 
-public class SimpleRetriever implements PipelineStage {
+public class SimpleRetriever implements Retriever {
 
     private final KeywordIndex index;
     private final int k; // How many results we want
@@ -72,15 +72,14 @@ public class SimpleRetriever implements PipelineStage {
             } catch (Exception e) {
                 
             }
-
-            retrievalHits.add(hitMap.);
+            
+            
+            retrievalHits.add(new Hit(chunk,score));
         }
 
         // Update Context
         context.setRetrievalHits(retrievalHits);
         System.out.println("   -> Retriever " + retrievalHits.size() + " sonuç buldu ve Context'e işledi.");
-
-        return context;
     }
 
     @Override

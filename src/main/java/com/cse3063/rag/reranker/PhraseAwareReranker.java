@@ -1,76 +1,49 @@
 package com.cse3063.rag.reranker;
 
 import com.cse3063.rag.orchestrator.PipelineStage;
-import com.cse3063.rag.retriever.Hit;
 import com.cse3063.rag.orchestrator.Context;
-import java.util.*;
+import com.cse3063.rag.retriever.Hit;
+import java.util.Comparator;
+import java.util.List;
 
 public class PhraseAwareReranker implements PipelineStage {
 
-    private final int topK;
-    private final double PHRASE_BONUS = 2.0;
-
-    public PhraseAwareReranker(int topK) {
-        this.topK = topK;
-    }
+    private static final double PHRASE_BOOST = 5.0; // Configurable boost value
 
     @Override
     public void execute(Context context) {
-
-        //Take Map List from context
+        String query = context.getOriginalQuestion();
         List<Hit> hits = context.getRetrievalHits();
 
-        if (hits == null || hits.isEmpty()) {
+        if (query == null || query.isEmpty() || hits == null || hits.isEmpty()) {
             return;
         }
 
-        String query = context.getOriginalQuestion().toLowerCase().trim();
+        String lowerQuery = query.toLowerCase().trim();
 
-        //Look at list and update scores
+        // 1. Re-score: Check if the exact query phrase appears in the text
         for (Hit hit : hits) {
-            String text = hit.getChunk().getText().toLowerCase();
-            //Take strings from map
-            hit.getChunk().getText().toLowerCase();
-            String scoreStr = hit.getOrDefault("score", "0.0");
-
-            // Convert to double
-            double currentScore = 0.0;
-            try {
-                currentScore = Double.parseDouble(scoreStr);
-            } catch (NumberFormatException e) {
-                currentScore = 0.0;
+            if (hit.getChunk().getText() != null) {
+                String lowerText = hit.getChunk().getText().toLowerCase();
+                if (lowerText.contains(lowerQuery)) {
+                    // Apply boost to the existing score
+                    double newScore = hit.getScore() + PHRASE_BOOST;
+                    hit.setScore(newScore);
+                }
             }
-
-            //If there is full matching, add score
-            if (text.contains(query)) {
-                currentScore += PHRASE_BONUS;
-            }
-
-            //Write new score to Map
-            hit.put("score", String.valueOf(currentScore));
         }
 
-        //Order list by new score
-        hits.sort((map1, map2) -> {
-            double s1 = Double.parseDouble(map1.get("score"));
-            double s2 = Double.parseDouble(map2.get("score"));
-            return Double.compare(s2, s1); // decreasing order
-        });
+        // 2. Re-sort: Order by new scores (Descending)
+        hits.sort(Comparator.comparingDouble(Hit::getScore).reversed());
 
-        //Keep only first K elements
-        if (hits.size() > topK) {
-            //It makes a new Arraylist from subList
-            hits = new ArrayList<>(hits.subList(0, topK));
-        }
-
-        //Put updated list to Context
+        // 3. Update Context
         context.setRetrievalHits(hits);
-        return context;
+        System.out.println("   -> PhraseAwareReranker re-sorted " + hits.size() + " hits.");
+        return;
     }
 
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String getName() {
+        return "PhraseAwareReranker";
+    }
 }

@@ -20,16 +20,14 @@ public class RagOrchestrator {
         // however some examples pass a simple string. We'll create a minimal map here
         // to preserve compatibility.
         this.pipeline = new Pipeline();
-        this.factory = new StageFactory(Map.of("config_path", configPath));
 
-        buildPipeline();
+        buildPipeline(configPath);
     }
 
     /**
      * Preferred constructor that accepts an already-parsed application configuration.
      */
     public RagOrchestrator(Map<String, Object> appConfig) {
-        this.factory = new StageFactory(appConfig);
         this.pipeline = new Pipeline();
 
         buildPipeline();
@@ -40,13 +38,13 @@ public class RagOrchestrator {
      * Defines the fixed skeleton of the RAG workflow.
      * The order is fixed, but the implementation of each step is variable (Strategy).
      */
-    private void buildPipeline() {
+    private void buildPipeline(String configPath) {
         // The order is strictly defined here:
-        pipeline.addStage(factory.createStage("intent_detector"));
-        pipeline.addStage(factory.createStage("query_writer"));
-        pipeline.addStage(factory.createStage("retriever"));
-        pipeline.addStage(factory.createStage("reranker"));
-        pipeline.addStage(factory.createStage("answer_agent"));
+        pipeline.addStage(ComponentFactory.createIntentDetector(configPath));
+        pipeline.addStage(ComponentFactory.createQueryWriter(configPath));
+        pipeline.addStage(ComponentFactory.createRetriever(configPath));
+        pipeline.addStage(ComponentFactory.createReranker(configPath));
+        pipeline.addStage(ComponentFactory.createAnswerAgent(configPath));
     }
 
     public String answerQuestion(String question) {

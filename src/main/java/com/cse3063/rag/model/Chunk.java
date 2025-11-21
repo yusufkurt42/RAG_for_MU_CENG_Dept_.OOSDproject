@@ -25,6 +25,18 @@ public class Chunk {
         );
     }
 
+    public String getDocId() {
+        return docId;
+    }
+
+    public int getStartOffset() {
+        return startOffset;
+    }
+
+    public int getEndOffset() {
+        return endOffset;
+    }
+
     private String escapeJson(String str) {
         return str.replace("\"", "\\\"").replace("\n", "\\n");
     }
