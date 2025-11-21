@@ -42,7 +42,7 @@ public class RagOrchestrator {
         try {
             pipeline.addStage(ComponentFactory.createIntentDetector(configPath));
             pipeline.addStage(ComponentFactory.createQueryWriter(configPath));
-            pipeline.addStage(ComponentFactory.createRetriever(configPath, null));
+            pipeline.addStage(ComponentFactory.createRetriever(configPath, chunkPath));
             pipeline.addStage(ComponentFactory.createReranker(configPath));
             pipeline.addStage(ComponentFactory.createAnswerAgent(configPath, chunkPath));
         } catch (IOException e) {

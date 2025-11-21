@@ -176,12 +176,18 @@ public class ComponentFactory {
      * Creates the Retriever strategy. Needs external Index object (Information Expert).
      * @throws IOException 
      */
-    public static Retriever createRetriever(String configPath, KeywordIndex keywordIndex) throws IOException {
+    public static Retriever createRetriever(String configPath, String chunkPath) throws IOException {
         
         // 1. Konfigürasyonu Yükle
         Map<String, Object> masterConfig = JsonConfigLoader.loadAndParse(configPath);
         Map<String, Object> config = getConfigSection(masterConfig, "retriever");
         String type = (String) Optional.ofNullable(config.get("type")).orElse("simple");
+
+        ChunkStore store = ChunkStoreLoader.load(chunkPath);
+
+        KeywordIndex keywordIndex = new KeywordIndex(store.getAllChunks());
+
+         // 1. Türü Kontrol Et
 
         if (!type.equalsIgnoreCase("simple")) {
             throw new IllegalArgumentException("Unknown Retriever type: " + type);
