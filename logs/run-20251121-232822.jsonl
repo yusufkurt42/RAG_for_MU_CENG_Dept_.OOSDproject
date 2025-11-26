@@ -1,5 +1,0 @@
-{"stage":"intent_detector","input":"Context(Input)","output":"Success","timestamp":1763756902982,"durationMs":1}
-{"stage":"query_writer","input":"Context(Input)","output":"Success","timestamp":1763756903007,"durationMs":1}
-{"stage":"SimpleRetriever","input":"Context(Input)","output":"Success","timestamp":1763756903014,"durationMs":6}
-{"stage":"PhraseAwareReranker","input":"Context(Input)","output":"Success","timestamp":1763756903024,"durationMs":9}
-{"stage":"answer_agent","input":"Context(Input)","output":"Success","timestamp":1763756903032,"durationMs":7}
