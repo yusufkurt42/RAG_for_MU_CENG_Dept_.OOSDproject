@@ -42,36 +42,35 @@ class RagOrchestrator:
             print(f"CRITICAL: Failed to build pipeline from config: {e}")
             raise
     
-    def answer_question(self, question: str) -> str:
+    def answer_question(self, question: str): # Returns Answer object, not just string
         """
         Process a question through the pipeline.
-        
-        Args:
-            question: User's question
-            
-        Returns:
-            Answer text
         """
-        print("--- ORCHESTRATOR: Starting Processing ---")
+        print(f"--- ORCHESTRATOR: Processing '{question[:30]}...' ---")
         
-        # Create context
         context = Context(original_question=question)
         
-        # Execute pipeline
         try:
+            # Execute pipeline without closing the bus immediately
             context = self.pipeline.execute(context, self.trace_bus)
         except Exception as e:
             print(f"Pipeline execution failed: {e}")
             import traceback
             traceback.print_exc()
-        finally:
-            # Ensure logs are flushed
-            self.trace_bus.close_all()
+        
+        # REMOVED: self.trace_bus.close_all() from here.
+        # It must be closed explicitly by the caller (main.py) after batch finishes.
         
         print("--- ORCHESTRATOR: Finished ---")
         
-        # Return result
+        # Return the full Answer object to access citations in main.py
         if context and context.final_answer:
-            return context.final_answer.text or ""
+            return context.final_answer
         else:
-            return "Cevap üretilemedi."
+            from ..answer.answer import Answer
+            return Answer(text="No answer generated.", citations=[])
+
+    def close(self):
+        """Explicitly close resources (logs)."""
+        if self.trace_bus:
+            self.trace_bus.close_all()
