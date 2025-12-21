@@ -1,53 +1,106 @@
-"""Main application entry point."""
-
 import argparse
 import sys
-from rag.orchestrator import RagOrchestrator
+import json
+import time
+import os
+from rag.orchestrator.rag_orchestrator import RagOrchestrator
+
+def run_batch(orchestrator, batch_file_path, output_file="batch_results.json"):
+    """
+    Executes batch processing from a JSON file.
+    Logs latency and answers.
+    """
+    print(f"Starting batch processing. Input: {batch_file_path}")
+    
+    # 1. Load Questions
+    try:
+        with open(batch_file_path, 'r', encoding='utf-8') as f:
+            questions = json.load(f)
+    except Exception as e:
+        print(f"Error reading batch file: {e}")
+        return
+
+    results = []
+    total_latency = 0
+    
+    # 2. Process Loop
+    for i, item in enumerate(questions):
+        # Handle format: [{"id":1, "question":"..."}]
+        q_id = item.get("id", i+1)
+        q_text = item.get("question", "")
+        
+        print(f"[{i+1}/{len(questions)}] Processing Question ID: {q_id}")
+        
+        start_time = time.time()
+        
+        # Call Orchestrator
+        answer_obj = orchestrator.answer_question(q_text)
+        
+        duration = time.time() - start_time
+        total_latency += duration
+        
+        # Store Result
+        results.append({
+            "id": q_id,
+            "question": q_text,
+            "answer": answer_obj.text,
+            "citations": answer_obj.citations,
+            "latency_seconds": round(duration, 3)
+        })
+
+    # 3. Generate Report
+    avg_latency = total_latency / len(questions) if questions else 0
+    report = {
+        "summary": {
+            "total_questions": len(questions),
+            "average_latency_seconds": round(avg_latency, 3)
+        },
+        "results": results
+    }
+    
+    # 4. Save to File
+    try:
+        with open(output_file, 'w', encoding='utf-8') as f:
+            json.dump(report, f, ensure_ascii=False, indent=2)
+        print(f"Batch completed successfully. Report saved to: {output_file}")
+    except Exception as e:
+        print(f"Error saving report: {e}")
 
 
 def main():
-    """Main function."""
-    # Default values
-    config_path = "resources/config.json"
-    chunk_path = "resources/chunks.json"
-    question = "Mazeret sınavı başvurusu nasıl yapılır?"
+    parser = argparse.ArgumentParser(description="RAG System - Batch Processing")
+    parser.add_argument("--config", type=str, default="resources/config.json", help="Path to config")
+    parser.add_argument("--chunks", type=str, default="resources/chunks.json", help="Path to chunks")
     
-    # Parse command line arguments
-    parser = argparse.ArgumentParser(description="RAG Application")
-    parser.add_argument("--config", type=str, help="Path to configuration file")
-    parser.add_argument("--chunks", type=str, help="Path to chunks file")
-    parser.add_argument("-q", "--question", type=str, help="Question to ask")
+    # Mutually exclusive: either single question OR batch file
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("-q", "--question", type=str, help="Single question to ask")
+    group.add_argument("--batch", type=str, help="Path to JSON file with questions")
     
     args = parser.parse_args()
     
-    # Override defaults with command line arguments
-    if args.config:
-        config_path = args.config
-    if args.chunks:
-        chunk_path = args.chunks
-    if args.question:
-        question = args.question
-    
-    print("Başlatılıyor...")
-    print(f"Config: {config_path}")
-    print(f"Soru: {question}")
-    
+    orchestrator = None
     try:
-        # Initialize orchestrator
-        orchestrator = RagOrchestrator(config_path, chunk_path)
+        # Initialize Orchestrator (Log file opens here)
+        orchestrator = RagOrchestrator(args.config, args.chunks)
         
-        # Run scenario
-        answer = orchestrator.answer_question(question)
-        
-        # Print output
-        print(f"\n{answer}")
-        
+        if args.batch:
+            # Run Batch Mode
+            run_batch(orchestrator, args.batch)
+        else:
+            # Run Single Question Mode
+            ans = orchestrator.answer_question(args.question)
+            print(f"\nANSWER:\n{ans.text}")
+            print(f"CITATIONS: {ans.citations}")
+            
     except Exception as e:
-        print(f"Uygulama Hatası: {e}", file=sys.stderr)
+        print(f"Critical Error: {e}")
         import traceback
         traceback.print_exc()
-        sys.exit(1)
-
+    finally:
+        # IMPORTANT: Close logs only when the program exits
+        if orchestrator:
+            orchestrator.close()
 
 if __name__ == "__main__":
     main()
