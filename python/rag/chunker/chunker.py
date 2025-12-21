@@ -1,4 +1,9 @@
 """Text chunking implementations."""
+"""
+Chunking strategies used both by:
+- offline ingestion tools (tools/build_chunks.py)
+- potential future online pipelines
+"""
 
 from abc import ABC, abstractmethod
 from typing import List
