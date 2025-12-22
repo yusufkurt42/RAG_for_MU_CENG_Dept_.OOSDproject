@@ -15,6 +15,7 @@ class EmbeddingProvider(Protocol):
         ...
 
 
+
 @dataclass(frozen=True)
 class HashEmbeddingConfig:
     dim: int = 64

@@ -7,8 +7,6 @@ from typing import TYPE_CHECKING, Protocol, List
 if TYPE_CHECKING:
     from ..orchestrator.context import Context
 
-from typing import Protocol, List, Dict
-
 from ..model import Chunk
 from .keyword_index import KeywordIndex
 from .hit import Hit
@@ -24,7 +22,6 @@ class Retriever(Protocol):
     def get_name(self) -> str:
         """Get retriever name."""
         ...
-
 
 class SimpleRetriever:
     """Simple keyword-based retriever."""
@@ -74,7 +71,9 @@ class SimpleRetriever:
         ]
         
         context.retrieval_hits = retrieval_hits
-        print(f"   -> Retriever found {len(retrieval_hits)} results")
+        print(f"   -> Retriever found {len(retrieval_hits)} results (k={self.k})")
+
+
     
     def get_name(self) -> str:
         """Get retriever name."""
