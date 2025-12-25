@@ -30,6 +30,14 @@
     ]
   },
 
+  "policy": {
+    "banned_keywords": [
+      "yasak",
+      "illegal",
+      "hack"
+    ]
+  },
+
   "query_writer": {
     "type": "heuristic",
     "stopwords": [

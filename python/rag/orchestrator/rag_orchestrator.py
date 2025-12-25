@@ -35,6 +35,7 @@ class RagOrchestrator:
             # Add stages in fixed order
             self.pipeline.add_stage(ComponentFactory.create_intent_detector(config_path))
             self.pipeline.add_stage(ComponentFactory.create_query_writer(config_path))
+            self.pipeline.add_stage(ComponentFactory.create_policy_rerouter(config_path))
             self.pipeline.add_stage(ComponentFactory.create_retriever(config_path, chunk_path))
             self.pipeline.add_stage(ComponentFactory.create_reranker(config_path))
             self.pipeline.add_stage(ComponentFactory.create_answer_agent(config_path, chunk_path))

@@ -28,6 +28,9 @@ class Context:
     # Query Writing Stage
     query_terms: List[str] = field(default_factory=list)
     
+    # Policy Stage
+    policy_violation: Optional[str] = None
+    
     # Retrieval Stage
     retrieval_hits: List[Hit] = field(default_factory=list)
     
