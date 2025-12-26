@@ -7,6 +7,8 @@ if TYPE_CHECKING:
     from ..writer import HeuristicQueryWriter
 from ..retriever import SimpleRetriever, KeywordIndex
 from ..reranker.reranker import Reranker, PhraseAwareReranker, JaccardReranker
+from ..retriever import SimpleRetriever, KeywordIndex, CacheRetriever
+from ..reranker import PhraseAwareReranker
 from ..answer import TemplateAnswerAgent
 from ..model import ChunkStore
 from ..utility import ChunkStoreLoader, JsonConfigLoader
@@ -15,6 +17,7 @@ from ..retriever import VectorRetriever, VectorIndex
 from ..retriever.vector_retriever import VectorRetrieverConfig
 import os
 import json
+from ..policy import PolicyRerouter, KeywordPolicyRerouter
 
 
 class ComponentFactory:
@@ -87,17 +90,30 @@ class ComponentFactory:
         """Create retriever from configuration."""
         master_config = JsonConfigLoader.load_and_parse(config_path)
 
+
         # Get chunk store
         if not chunk_path:
             data_config = ComponentFactory._get_config_section(master_config, "data_paths")
             chunk_path = data_config.__getitem__("chunk_file_path")
 
+
         chunk_store = ChunkStoreLoader.load(chunk_path)
 
+
+        # Build keyword index
+        index = KeywordIndex()
+        index.build_from_chunks(chunk_store.get_all_chunks())
+
+        # Get retriever config
         retriever_config = master_config.get("retriever", {})
         rtype = retriever_config.get("type", "keyword")
         k = retriever_config.get("k", 10)
 
+        use_cache = retriever_config.get("use_cache", False)
+
+        if use_cache:
+            cache_file = retriever_config.get("cache_file", "resources/cache.json")
+            return CacheRetriever(index, k, cache_file)
         if rtype == "keyword":
             data_cfg = master_config.get("data_paths", {})
             index_path = data_cfg.get("index_file_path")
@@ -202,3 +218,12 @@ class ComponentFactory:
             chunk_store = ComponentFactory.create_chunk_store(config_path)
         
         return TemplateAnswerAgent(chunk_store)
+    
+    @staticmethod
+    def create_policy_rerouter(config_path: str) -> KeywordPolicyRerouter:
+        """Create policy rerouter from configuration."""
+        master_config = JsonConfigLoader.load_and_parse(config_path)
+        config = ComponentFactory._get_config_section(master_config, "policy")
+        
+        banned_keywords = config.get("banned_keywords", [])
+        return KeywordPolicyRerouter(banned_keywords)

@@ -30,6 +30,14 @@
     ]
   },
 
+  "policy": {
+    "banned_keywords": [
+      "yasak",
+      "illegal",
+      "hack"
+    ]
+  },
+
   "query_writer": {
     "type": "heuristic",
     "stopwords": [
@@ -59,22 +67,17 @@
   },
 
   "retriever": {
-    "type": "vector",
+    "type": "simple",
     "k": 5
   },
 
   "reranker": {
-    "type": "jaccard",
+    "type": "simple",
     "proximity_window": 15,
     "title_boost_factor": 3.0
   },
 
-  "llm": {
-    "type": "ollama",
-    "model_name": "mistral:latest"
-  },
-
   "answer_agent": {
-    "type": "ollama"
+    "type": "template"
   }
 }

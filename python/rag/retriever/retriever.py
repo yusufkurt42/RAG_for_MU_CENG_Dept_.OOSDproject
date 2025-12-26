@@ -7,6 +7,10 @@ from typing import TYPE_CHECKING, Protocol, List, Dict
 if TYPE_CHECKING:
     from ..orchestrator.context import Context
 
+from typing import Protocol, List, Dict
+import os
+import json
+
 from ..model import Chunk
 from .keyword_index import KeywordIndex
 from .hit import Hit
@@ -78,3 +82,59 @@ class SimpleRetriever:
     def get_name(self) -> str:
         """Get retriever name."""
         return "SimpleRetriever"
+
+
+class CacheRetriever(SimpleRetriever):
+    """Retriever with caching capabilities."""
+    def __init__(self, index: KeywordIndex, k: int = 10, cache_file: str = "resources/cache.json"):
+        super().__init__(index, k)
+        self.cache_file = cache_file
+        # Load cache directly in the constructor
+        if os.path.exists(self.cache_file):
+            try:
+                with open(self.cache_file, 'r', encoding='utf-8') as f:
+                    self.cache = json.load(f)
+            except (json.JSONDecodeError, IOError):
+                self.cache = {}
+        else:
+            self.cache = {}
+
+    def execute(self, context: Context) -> None:
+        """Execute retrieval with caching."""
+        query_terms = context.query_terms
+        if not query_terms:
+            context.retrieval_hits = []
+            return
+
+        # Create a cache key based on the query terms
+        cache_key = tuple(sorted(query_terms))
+        cache_key_str = json.dumps(cache_key)
+        if cache_key_str in self.cache:
+            # Use cached results
+            context.retrieval_hits = [Hit(**hit) for hit in self.cache[cache_key_str]]
+            return
+
+        # Perform retrieval if not cached
+        scores = {}
+        for term in query_terms:
+            for chunk, frequency in self.index.search(term).items():
+                scores[chunk] = scores.get(chunk, 0) + frequency
+
+        # Sort and select top-k results
+        sorted_chunks = sorted(scores.items(), key=lambda item: item[1], reverse=True)
+        top_hits = [Hit(chunk, score) for chunk, score in sorted_chunks[:self.k]]
+
+        # Cache the results and save directly
+        self.cache[cache_key_str] = [hit.__dict__ for hit in top_hits]
+        try:
+            with open(self.cache_file, 'w', encoding='utf-8') as f:
+                json.dump(self.cache, f, ensure_ascii=False, indent=4)
+        except IOError:
+            pass
+
+        # Update context
+        context.retrieval_hits = top_hits
+
+    def get_name(self) -> str:
+        """Get retriever name."""
+        return "CacheRetriever"

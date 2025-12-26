@@ -40,6 +40,14 @@ class TemplateAnswerAgent:
     
     def execute(self, context: Context) -> None:
         """Execute answer generation on the context."""
+        # Check for policy violation first
+        if context.policy_violation:
+            context.final_answer = Answer(
+                text=f"İsteğiniz politika kuralları gereği reddedildi: {context.policy_violation}",
+                citations=[]
+            )
+            return
+
         query_terms = context.query_terms
         top_hits = context.retrieval_hits
         
