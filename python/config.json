@@ -1,0 +1,15 @@
+{
+  "data_paths": {
+    "chunk_file_path": "data/chunks.json"
+  },
+
+  "retriever": {
+    "type": "vector",
+    "k": 10
+  },
+
+  "embedding": {
+    "dim": 64,
+    "salt": "miniRAG-v1"
+  }
+}

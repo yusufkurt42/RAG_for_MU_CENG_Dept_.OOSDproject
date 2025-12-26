@@ -6,8 +6,4 @@ __pycache__/
 logs/
 python/logs/
 
-# Local configs
-python/config.json
 
-# Local resources (data/pdf/chunks) - keep out of git unless required
-python/resources/
