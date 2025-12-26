@@ -2,18 +2,19 @@
 
 from .hit import Hit
 from .keyword_index import KeywordIndex
-from .retriever import Retriever, SimpleRetriever
+from .retriever import Retriever, SimpleRetriever, CacheRetriever
 from .vector_index import VectorIndex, VectorIndexConfig
 from .vector_retriever import VectorRetriever, VectorRetrieverConfig
 
 
 __all__ = [
-    'Hit',
-    'KeywordIndex',
-    'Retriever',
-    'SimpleRetriever',
-    'VectorIndex',
-    'VectorIndexConfig',
-    'VectorRetriever',
-    'VectorRetrieverConfig',
+    "Hit",
+    "KeywordIndex",
+    "Retriever",
+    "SimpleRetriever",
+    "CacheRetriever",
+    "VectorIndex",
+    "VectorIndexConfig",
+    "VectorRetriever",
+    "VectorRetrieverConfig",
 ]

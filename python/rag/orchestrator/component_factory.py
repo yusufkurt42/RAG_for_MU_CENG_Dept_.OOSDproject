@@ -7,6 +7,8 @@ if TYPE_CHECKING:
     from ..writer import HeuristicQueryWriter
 from ..retriever import SimpleRetriever, KeywordIndex
 from ..reranker.reranker import Reranker, PhraseAwareReranker, JaccardReranker
+from ..retriever import SimpleRetriever, KeywordIndex, CacheRetriever
+from ..reranker import PhraseAwareReranker
 from ..answer import TemplateAnswerAgent
 from ..model import ChunkStore
 from ..utility import ChunkStoreLoader, JsonConfigLoader
@@ -15,6 +17,7 @@ from ..retriever import VectorRetriever, VectorIndex
 from ..retriever.vector_retriever import VectorRetrieverConfig
 import os
 import json
+from ..policy import PolicyRerouter, KeywordPolicyRerouter
 
 
 class ComponentFactory:
@@ -94,27 +97,40 @@ class ComponentFactory:
 
         chunk_store = ChunkStoreLoader.load(chunk_path)
 
+        # Get retriever config
         retriever_config = master_config.get("retriever", {})
         rtype = retriever_config.get("type", "keyword")
         k = retriever_config.get("k", 10)
+        use_cache = retriever_config.get("use_cache", False)
 
-        if rtype == "keyword":
+        # Prepare KeywordIndex if needed (for keyword/simple or cache)
+        # We load it once here to avoid code duplication
+        index = None
+        if rtype in ["keyword", "simple"] or use_cache:
             data_cfg = master_config.get("data_paths", {})
             index_path = data_cfg.get("index_file_path")
-            print(f"DEBUG keyword index source = {'file' if (index_path and os.path.exists(index_path)) else 'rebuild'}")
-
-
+            
             index = KeywordIndex()
-
             if index_path and os.path.exists(index_path):
+                print(f"Loading index from {index_path}")
                 with open(index_path, "r", encoding="utf-8") as f:
                     raw = json.load(f)
                 index = KeywordIndex.load_from_dict(raw)
-                # IMPORTANT: map chunk_id -> Chunk so SimpleRetriever can work
                 index.attach_chunks(chunk_store.get_all_chunks())
             else:
+                print("Building index from chunks")
                 index.build_from_chunks(chunk_store.get_all_chunks())
 
+        if use_cache:
+            if index is None:
+                 # Should not happen given logic above, but for safety
+                 index = KeywordIndex()
+                 index.build_from_chunks(chunk_store.get_all_chunks())
+            
+            cache_file = retriever_config.get("cache_file", "resources/cache.json")
+            return CacheRetriever(index, k, cache_file)
+
+        if rtype == "keyword" or rtype == "simple":
             return SimpleRetriever(index, k)
         
         if rtype == "vector":
@@ -138,7 +154,6 @@ class ComponentFactory:
                 embedder=embedder,
                 cfg=VectorRetrieverConfig(k=k),
             )
-
 
         raise ValueError(f"Unsupported Retriever type: {rtype}")
     
@@ -202,3 +217,12 @@ class ComponentFactory:
             chunk_store = ComponentFactory.create_chunk_store(config_path)
         
         return TemplateAnswerAgent(chunk_store)
+    
+    @staticmethod
+    def create_policy_rerouter(config_path: str) -> KeywordPolicyRerouter:
+        """Create policy rerouter from configuration."""
+        master_config = JsonConfigLoader.load_and_parse(config_path)
+        config = ComponentFactory._get_config_section(master_config, "policy")
+        
+        banned_keywords = config.get("banned_keywords", [])
+        return KeywordPolicyRerouter(banned_keywords)
