@@ -109,14 +109,39 @@ class CacheRetriever(SimpleRetriever):
         # Create a cache key based on the query terms
         cache_key = tuple(sorted(query_terms))
         cache_key_str = json.dumps(cache_key)
+        
         if cache_key_str in self.cache:
             # Use cached results
-            context.retrieval_hits = [Hit(**hit) for hit in self.cache[cache_key_str]]
-            return
+            try:
+                cached_hits = []
+                for hit_data in self.cache[cache_key_str]:
+                    # Reconstruct Chunk object
+                    chunk_data = hit_data['chunk']
+                    chunk = Chunk(
+                        id=chunk_data['id'],
+                        doc_id=chunk_data['docId'],
+                        start_offset=chunk_data['startOffset'],
+                        end_offset=chunk_data['endOffset'],
+                        text=chunk_data['text']
+                    )
+                    # Reconstruct Hit object
+                    hit = Hit(
+                        chunk=chunk,
+                        initial_score=hit_data['initial_score'],
+                        rerank_score=hit_data.get('rerank_score', 0.0)
+                    )
+                    cached_hits.append(hit)
+                
+                context.retrieval_hits = cached_hits
+                return
+            except (KeyError, TypeError) as e:
+                print(f"Cache corruption detected: {e}. Ignoring cache.")
 
         # Perform retrieval if not cached
         scores = {}
         for term in query_terms:
+            if not term:
+                continue
             for chunk, frequency in self.index.search(term).items():
                 scores[chunk] = scores.get(chunk, 0) + frequency
 
@@ -124,13 +149,25 @@ class CacheRetriever(SimpleRetriever):
         sorted_chunks = sorted(scores.items(), key=lambda item: item[1], reverse=True)
         top_hits = [Hit(chunk, score) for chunk, score in sorted_chunks[:self.k]]
 
-        # Cache the results and save directly
-        self.cache[cache_key_str] = [hit.__dict__ for hit in top_hits]
+        # Cache the results
         try:
+            serialized_hits = []
+            for hit in top_hits:
+                serialized_hits.append({
+                    'chunk': hit.chunk.to_dict(),
+                    'initial_score': hit.initial_score,
+                    'rerank_score': hit.rerank_score
+                })
+            
+            self.cache[cache_key_str] = serialized_hits
+            
+            # Ensure directory exists
+            os.makedirs(os.path.dirname(self.cache_file), exist_ok=True)
+            
             with open(self.cache_file, 'w', encoding='utf-8') as f:
                 json.dump(self.cache, f, ensure_ascii=False, indent=4)
-        except IOError:
-            pass
+        except IOError as e:
+            print(f"Failed to write cache: {e}")
 
         # Update context
         context.retrieval_hits = top_hits

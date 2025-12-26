@@ -29,7 +29,6 @@
       2
     ]
   },
-
   "policy": {
     "banned_keywords": [
       "yasak",
@@ -67,17 +66,22 @@
   },
 
   "retriever": {
-    "type": "simple",
+    "type": "vector",
     "k": 5
   },
 
   "reranker": {
-    "type": "simple",
+    "type": "jaccard",
     "proximity_window": 15,
     "title_boost_factor": 3.0
   },
 
+  "llm": {
+    "type": "ollama",
+    "model_name": "mistral:latest"
+  },
+
   "answer_agent": {
-    "type": "template"
+    "type": "ollama"
   }
 }
