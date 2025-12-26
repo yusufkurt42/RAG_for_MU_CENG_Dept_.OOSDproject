@@ -1,7 +1,7 @@
 """Retrieval components."""
 
 from __future__ import annotations
-from typing import TYPE_CHECKING, Protocol, List
+from typing import TYPE_CHECKING, Protocol, List, Dict
 
 # 1. Move import here
 if TYPE_CHECKING:

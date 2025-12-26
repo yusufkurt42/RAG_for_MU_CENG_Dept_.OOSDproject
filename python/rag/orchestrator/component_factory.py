@@ -6,7 +6,7 @@ from ..detector import Intent, RuleIntentDetector
 if TYPE_CHECKING:
     from ..writer import HeuristicQueryWriter
 from ..retriever import SimpleRetriever, KeywordIndex
-from ..reranker import PhraseAwareReranker
+from ..reranker.reranker import Reranker, PhraseAwareReranker, JaccardReranker
 from ..answer import TemplateAnswerAgent
 from ..model import ChunkStore
 from ..utility import ChunkStoreLoader, JsonConfigLoader
@@ -143,11 +143,37 @@ class ComponentFactory:
         raise ValueError(f"Unsupported Retriever type: {rtype}")
     
     @staticmethod
-    def create_reranker(config_path: str) -> PhraseAwareReranker:
-        """Create reranker from configuration."""
-        # For now, just return default reranker
-        # Could read boost value from config
-        return PhraseAwareReranker()
+    def create_reranker(config_path: str) -> Reranker:
+        """Create reranker instance from configuration.
+
+        Supported types (case-insensitive):
+        - "phrase", "phrase_aware", "simple": returns PhraseAwareReranker
+        - "jaccard": returns JaccardReranker
+
+        Raises ValueError for unsupported types.
+        """
+        master_config = JsonConfigLoader.load_and_parse(config_path)
+        # Use a default empty dict if not present so we can provide a sensible default
+        reranker_cfg = master_config.get("reranker", {}) or {}
+
+        rtype = str(reranker_cfg.get("type", "phrase")).lower()
+
+        if rtype in ("phrase", "phrase_aware", "simple"):
+            rr = PhraseAwareReranker()
+            # Optional: allow overriding boost from config
+            if "phrase_boost" in reranker_cfg:
+                try:
+                    rr.PHRASE_BOOST = float(reranker_cfg["phrase_boost"])
+                except Exception:
+                    # ignore invalid value and keep default
+                    pass
+            return rr
+
+        if rtype in ("jaccard", "jaccard_similarity"):
+            return JaccardReranker()
+
+        raise ValueError(f"Unsupported Reranker type: {rtype}")
+    
     
     @staticmethod
     def create_answer_agent(config_path: str, chunk_path: str = "") -> Any:

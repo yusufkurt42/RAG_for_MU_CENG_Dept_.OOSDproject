@@ -59,12 +59,12 @@
   },
 
   "retriever": {
-    "type": "simple",
+    "type": "vector",
     "k": 5
   },
 
   "reranker": {
-    "type": "simple",
+    "type": "jaccard",
     "proximity_window": 15,
     "title_boost_factor": 3.0
   },
