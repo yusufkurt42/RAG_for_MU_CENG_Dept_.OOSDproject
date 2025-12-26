@@ -41,14 +41,18 @@ python/
 
 ```bash
 pip install -e .
+pip install -r requirements.txt
 ```
-
 ## Running the Application
 
 ```bash
 python python/main.py --question "Your question here"
 ```
 
+## Or for batch processing
+```bash
+python python/main.py -q "Your first question here" -q "Your second question here" ... -q "Your nth question here"
+```
 ### Command Line Options
 
 - `--config`: Path to configuration file (default: `resources/config.json`)
