@@ -21,8 +21,6 @@ class ComponentFactory:
 
     """Factory for creating pipeline components."""
     
-
-    
     @staticmethod
     def _get_config_section(master_config: Dict[str, Any], section_key: str) -> Dict[str, Any]:
         """Get a configuration section."""
@@ -84,7 +82,6 @@ class ComponentFactory:
         
         return HeuristicQueryWriter(stopwords, boosters, suffix_list, max_terms)
     
-    
     @staticmethod
     def create_retriever(config_path: str, chunk_path: str = ""):
         """Create retriever from configuration."""
@@ -144,7 +141,6 @@ class ComponentFactory:
 
 
         raise ValueError(f"Unsupported Retriever type: {rtype}")
-
     
     @staticmethod
     def create_reranker(config_path: str) -> PhraseAwareReranker:
@@ -154,8 +150,41 @@ class ComponentFactory:
         return PhraseAwareReranker()
     
     @staticmethod
-    def create_answer_agent(config_path: str, chunk_path: str = "") -> TemplateAnswerAgent:
+    def create_answer_agent(config_path: str, chunk_path: str = "") -> Any:
         """Create answer agent from configuration."""
+        master_config = JsonConfigLoader.load_and_parse(config_path)
+        
+        # Check for answer agent config
+        agent_config = master_config.get("answer_agent", {})
+        agent_type = agent_config.get("type", "template")
+        
+        if agent_type == "gemini":
+            from ..llm.gemini_llm import GeminiLLM
+            from ..answer.gemini_answer_agent import GeminiAnswerAgent
+            import os
+            
+            llm_config = master_config.get("llm", {})
+            api_key_env = llm_config.get("api_key_env_var", "GEMINI_API_KEY")
+            api_key = os.environ.get(api_key_env)
+            
+            if not api_key:
+                raise ValueError(f"Gemini API key not found in environment variable: {api_key_env}")
+                
+            model_name = llm_config.get("model_name", "gemini-pro")
+            llm = GeminiLLM(api_key=api_key, model_name=model_name)
+            return GeminiAnswerAgent(llm)
+            
+        elif agent_type == "ollama":
+            from ..llm.ollama_llm import OllamaLLM
+            from ..answer.ollama_answer_agent import OllamaAnswerAgent
+            
+            llm_config = master_config.get("llm", {})
+            base_url = llm_config.get("base_url", "http://localhost:11434")
+            model_name = llm_config.get("model_name", "llama3")
+            
+            llm = OllamaLLM(base_url=base_url, model_name=model_name)
+            return OllamaAnswerAgent(llm)
+
         # Get chunk store
         if chunk_path:
             chunk_store = ChunkStoreLoader.load(chunk_path)
@@ -163,4 +192,3 @@ class ComponentFactory:
             chunk_store = ComponentFactory.create_chunk_store(config_path)
         
         return TemplateAnswerAgent(chunk_store)
-
