@@ -16,12 +16,25 @@ This directory contains the Python version of the RAG (Retrieval-Augmented Gener
    GEMINI_API_KEY=your_api_key_here
    ```
 
-3. **Run the application:**
+3. **Run the application (single question):**
    ```bash
    python python/main.py --question "Ali Haydar Özer'in maili nedir?"
    ```
 
-4. **Run tests:**
+4. **Run the application (multiple questions / batch):**
+
+   You can provide multiple questions by repeating the `-q/--question` flag.
+   Each `-q` will be processed and an answer printed for each question.
+
+   Example (PowerShell):
+   ```powershell
+   python python/main.py -q "İlk sorum nedir?" -q "İkinci sorum nedir?"
+   ```
+
+   The program will detect multiple questions and run them in batch, printing
+   a separator and the corresponding answer for each provided question.
+
+5. **Run tests:**
    ```bash
    pytest python/tests/
    ```
