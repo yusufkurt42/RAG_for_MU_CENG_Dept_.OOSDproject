@@ -1,16 +1,21 @@
 """Main application entry point."""
-
+import os
 import argparse
 import sys
+from dotenv import load_dotenv
 from rag.orchestrator import RagOrchestrator
+
+# Load environment variables
+load_dotenv()
 
 
 def main():
     """Main function."""
     # Default values
+    # os.chdir(".\\OOSD_RAG\\rag_python\\")
     config_path = "resources/config.json"
     chunk_path = "resources/chunks.json"
-    question = "Mazeret sınavı başvurusu nasıl yapılır?"
+    question = "Ali haydar mail"
     
     # Parse command line arguments
     parser = argparse.ArgumentParser(description="RAG Application")

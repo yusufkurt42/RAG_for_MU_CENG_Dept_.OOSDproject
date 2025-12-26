@@ -36,4 +36,4 @@ class Context:
     
     def __str__(self) -> str:
         """String representation of context."""
-        return f"Context(question='{self.original_question[:50]}...', intent={self.current_intent})"
+        return f"Context(original_question='{self.original_question[:50]}', current_intent={self.current_intent}, query_terms={self.query_terms}, retreival_hits={self.retrieval_hits}, final_answer={self.final_answer})"

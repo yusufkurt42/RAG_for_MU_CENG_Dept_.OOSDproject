@@ -11,3 +11,4 @@ python/config.json
 
 # Local resources (data/pdf/chunks) - keep out of git unless required
 python/resources/
+.env
