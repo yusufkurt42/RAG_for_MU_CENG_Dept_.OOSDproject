@@ -10,11 +10,18 @@ from ..reranker import PhraseAwareReranker
 from ..answer import TemplateAnswerAgent
 from ..model import ChunkStore
 from ..utility import ChunkStoreLoader, JsonConfigLoader
+from ..embedding import DeterministicHashEmbeddingProvider, HashEmbeddingConfig
+from ..retriever import VectorRetriever, VectorIndex
+from ..retriever.vector_retriever import VectorRetrieverConfig
+import os
+import json
 
 
 class ComponentFactory:
 
     """Factory for creating pipeline components."""
+    
+
     
     @staticmethod
     def _get_config_section(master_config: Dict[str, Any], section_key: str) -> Dict[str, Any]:
@@ -77,27 +84,67 @@ class ComponentFactory:
         
         return HeuristicQueryWriter(stopwords, boosters, suffix_list, max_terms)
     
+    
     @staticmethod
-    def create_retriever(config_path: str, chunk_path: str = "") -> SimpleRetriever:
+    def create_retriever(config_path: str, chunk_path: str = ""):
         """Create retriever from configuration."""
         master_config = JsonConfigLoader.load_and_parse(config_path)
-        
+
         # Get chunk store
         if not chunk_path:
             data_config = ComponentFactory._get_config_section(master_config, "data_paths")
             chunk_path = data_config.__getitem__("chunk_file_path")
-        
+
         chunk_store = ChunkStoreLoader.load(chunk_path)
-        
-        # Build keyword index
-        index = KeywordIndex()
-        index.build_from_chunks(chunk_store.get_all_chunks())
-        
-        # Get retriever config
+
         retriever_config = master_config.get("retriever", {})
+        rtype = retriever_config.get("type", "keyword")
         k = retriever_config.get("k", 10)
+
+        if rtype == "keyword":
+            data_cfg = master_config.get("data_paths", {})
+            index_path = data_cfg.get("index_file_path")
+            print(f"DEBUG keyword index source = {'file' if (index_path and os.path.exists(index_path)) else 'rebuild'}")
+
+
+            index = KeywordIndex()
+
+            if index_path and os.path.exists(index_path):
+                with open(index_path, "r", encoding="utf-8") as f:
+                    raw = json.load(f)
+                index = KeywordIndex.load_from_dict(raw)
+                # IMPORTANT: map chunk_id -> Chunk so SimpleRetriever can work
+                index.attach_chunks(chunk_store.get_all_chunks())
+            else:
+                index.build_from_chunks(chunk_store.get_all_chunks())
+
+            return SimpleRetriever(index, k)
         
-        return SimpleRetriever(index, k)
+        if rtype == "vector":
+            # Embedding config (optional)
+            emb_cfg_raw = master_config.get("embedding", {})
+            dim = emb_cfg_raw.get("dim", 64)
+            salt = emb_cfg_raw.get("salt", "miniRAG-v1")
+
+            embedder = DeterministicHashEmbeddingProvider(HashEmbeddingConfig(dim=dim, salt=salt))
+
+            # Build vector index over all chunks
+            vindex = VectorIndex()
+            chunks = chunk_store.get_all_chunks()
+            vectors = embedder.embed_texts([c.text for c in chunks])
+            vindex.add_many([(c.id, v) for c, v in zip(chunks, vectors)])
+
+            # IMPORTANT: apply k from config
+            return VectorRetriever(
+                chunk_store=chunk_store,
+                index=vindex,
+                embedder=embedder,
+                cfg=VectorRetrieverConfig(k=k),
+            )
+
+
+        raise ValueError(f"Unsupported Retriever type: {rtype}")
+
     
     @staticmethod
     def create_reranker(config_path: str) -> PhraseAwareReranker:
@@ -116,3 +163,4 @@ class ComponentFactory:
             chunk_store = ComponentFactory.create_chunk_store(config_path)
         
         return TemplateAnswerAgent(chunk_store)
+
