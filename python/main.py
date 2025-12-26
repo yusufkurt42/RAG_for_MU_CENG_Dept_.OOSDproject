@@ -15,7 +15,7 @@ def main():
     # os.chdir(".\\OOSD_RAG\\rag_python\\")
     config_path = "resources/config.json"
     chunk_path = "resources/chunks.json"
-    question = "Ali haydar mail"
+    question = "en düşük geçme notu ne?"
     
     # Parse command line arguments
     parser = argparse.ArgumentParser(description="RAG Application")
@@ -33,9 +33,9 @@ def main():
     if args.question:
         question = args.question
     
-    print("Başlatılıyor...")
-    print(f"Config: {config_path}")
-    print(f"Soru: {question}")
+    #print("Başlatılıyor...")
+    #print(f"Config: {config_path}")
+    #print(f"Soru: {question}")
     
     try:
         # Initialize orchestrator

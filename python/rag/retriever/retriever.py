@@ -71,7 +71,7 @@ class SimpleRetriever:
         ]
         
         context.retrieval_hits = retrieval_hits
-        print(f"   -> Retriever found {len(retrieval_hits)} results (k={self.k})")
+        #print(f"   -> Retriever found {len(retrieval_hits)} results (k={self.k})")
 
 
     

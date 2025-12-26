@@ -48,7 +48,7 @@ class VectorRetriever:
             hits.append(Hit(chunk=chunk, initial_score=score))
 
         context.retrieval_hits = hits
-        print(f"   -> Retriever found {len(hits)} results")
+        #print(f"   -> Retriever found {len(hits)} results")
 
     def get_name(self) -> str:
         return "VectorRetriever"

@@ -52,7 +52,7 @@ class RagOrchestrator:
         Returns:
             Answer text
         """
-        print("--- ORCHESTRATOR: Starting Processing ---")
+        #print("--- ORCHESTRATOR: Starting Processing ---")
         
         # Create context
         context = Context(original_question=question)
@@ -68,7 +68,7 @@ class RagOrchestrator:
             # Ensure logs are flushed
             self.trace_bus.close_all()
         
-        print("--- ORCHESTRATOR: Finished ---")
+        #print("--- ORCHESTRATOR: Finished ---")
         
         # Return result
         if context and context.final_answer:

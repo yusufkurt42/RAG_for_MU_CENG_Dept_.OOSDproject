@@ -40,7 +40,7 @@ class PhraseAwareReranker(Reranker):
         hits.sort(key=lambda h: h.get_effective_score(), reverse=True)
         
         context.retrieval_hits = hits
-        print(f"   -> PhraseAwareReranker re-sorted {len(hits)} hits")
+        #print(f"   -> PhraseAwareReranker re-sorted {len(hits)} hits")
     
     def get_name(self) -> str:
         """Get reranker name."""
@@ -93,7 +93,7 @@ class JaccardReranker(Reranker):
         hits.sort(key=lambda h: h.get_effective_score(), reverse=True)
         
         context.retrieval_hits = hits
-        print(f"   -> JaccardReranker re-sorted {len(hits)} hits")
+        #print(f"   -> JaccardReranker re-sorted {len(hits)} hits")
 
     def get_name(self) -> str:
         return "JaccardReranker"

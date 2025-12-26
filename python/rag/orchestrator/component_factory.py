@@ -183,24 +183,8 @@ class ComponentFactory:
         # Check for answer agent config
         agent_config = master_config.get("answer_agent", {})
         agent_type = agent_config.get("type", "template")
-        
-        if agent_type == "gemini":
-            from ..llm.gemini_llm import GeminiLLM
-            from ..answer.gemini_answer_agent import GeminiAnswerAgent
-            import os
-            
-            llm_config = master_config.get("llm", {})
-            api_key_env = llm_config.get("api_key_env_var", "GEMINI_API_KEY")
-            api_key = os.environ.get(api_key_env)
-            
-            if not api_key:
-                raise ValueError(f"Gemini API key not found in environment variable: {api_key_env}")
-                
-            model_name = llm_config.get("model_name", "gemini-pro")
-            llm = GeminiLLM(api_key=api_key, model_name=model_name)
-            return GeminiAnswerAgent(llm)
-            
-        elif agent_type == "ollama":
+                    
+        if agent_type == "ollama":
             from ..llm.ollama_llm import OllamaLLM
             from ..answer.ollama_answer_agent import OllamaAnswerAgent
             
