@@ -74,11 +74,15 @@ class RuleIntentDetector:
             context.current_intent = candidates[0]
             return
         
-        # Multiple candidates - use priority
+        # Multiple candidates - use priority.
+        # Priority values are indices into the insertion-ordered intent_rules
+        # mapping provided by the caller (so priority [1,0] means the second
+        # configured intent has higher priority than the first).
         if self.priority:
-            for intent_ordinal in self.priority:
-                if 0 <= intent_ordinal < len(Intent):
-                    priority_intent = list(Intent)[intent_ordinal]
+            intents_in_order = list(self.intent_rules.keys())
+            for intent_index in self.priority:
+                if 0 <= intent_index < len(intents_in_order):
+                    priority_intent = intents_in_order[intent_index]
                     if priority_intent in candidates:
                         context.current_intent = priority_intent
                         return
